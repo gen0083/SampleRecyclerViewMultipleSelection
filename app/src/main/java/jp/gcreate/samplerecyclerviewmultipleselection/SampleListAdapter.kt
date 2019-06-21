@@ -3,7 +3,6 @@ package jp.gcreate.samplerecyclerviewmultipleselection
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import jp.gcreate.samplerecyclerviewmultipleselection.databinding.ItemSampleDataBinding
 
 class SampleListAdapter : ListAdapter<SampleData, SampleItemViewHolder>(
     object: DiffUtil.ItemCallback<SampleData>() {
