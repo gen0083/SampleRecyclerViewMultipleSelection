@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import jp.gcreate.samplerecyclerviewmultipleselection.databinding.ActivityMainBinding
 import java.util.*
@@ -14,6 +15,7 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: SampleListAdapter
     private val random = Random(System.currentTimeMillis())
     private val charSource = ('0'..'z').toList()
     private var sampleList: MutableList<SampleData> = mutableListOf()
@@ -29,16 +31,25 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
         
+        setupRecyclerView()
         initializeSampleData()
     }
     
     private fun initializeSampleData() {
         sampleList = mutableListOf()
         repeat(30) {
-            val data = SampleData(UUID.randomUUID().toString(), generateRandomString())
+            val data = SampleData(UUID.randomUUID(), generateRandomString())
             sampleList.add(data)
         }
-        Log.d("test", sampleList.joinToString("\n"))
+        adapter.submitList(sampleList)
+    }
+    
+    private fun setupRecyclerView() {
+        binding.recyclerView.also { view ->
+            adapter = SampleListAdapter()
+            view.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            view.adapter = adapter
+        }
     }
     
     private fun generateRandomString(maxLength: Int = 12): String =
