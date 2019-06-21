@@ -31,6 +31,6 @@ class SampleListAdapter : ListAdapter<SampleData, SampleItemViewHolder>(
     }
     
     override fun getItemId(position: Int): Long {
-        return getItem(position).id.mostSignificantBits
+        return getItem(position).id
     }
 }

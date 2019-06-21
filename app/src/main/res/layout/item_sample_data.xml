@@ -50,7 +50,7 @@
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintBaseline_toBaselineOf="@+id/item_value"
             android:gravity="end"
-            android:text="@{item.id.toString()}"
+            android:text='@{"id:" + item.id}'
             tools:text="@tools:sample/lorem"
             />
 

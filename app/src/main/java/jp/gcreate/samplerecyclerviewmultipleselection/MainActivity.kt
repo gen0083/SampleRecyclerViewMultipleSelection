@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeSampleData() {
         sampleList = mutableListOf()
         repeat(30) {
-            val data = SampleData(UUID.randomUUID(), generateRandomString())
+            val data = SampleData(UUID.randomUUID().mostSignificantBits, generateRandomString())
             sampleList.add(data)
         }
         adapter.submitList(sampleList)
@@ -69,7 +69,10 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.shuffle -> true.apply {
+                sampleList.shuffle()
+                adapter.notifyDataSetChanged()
+            }
             else                 -> super.onOptionsItemSelected(item)
         }
     }
