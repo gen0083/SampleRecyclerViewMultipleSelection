@@ -1,6 +1,7 @@
 package jp.gcreate.samplerecyclerviewmultipleselection
 
 import android.view.ViewGroup
+import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
@@ -20,13 +21,16 @@ class SampleListAdapter : ListAdapter<SampleData, SampleItemViewHolder>(
         setHasStableIds(true)
     }
     
+    var tracker: SelectionTracker<Long>? = null
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleItemViewHolder {
         return SampleItemViewHolder.createViewHolder(R.layout.item_sample_data, parent, false)
     }
     
     override fun onBindViewHolder(holder: SampleItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        val selected = tracker?.isSelected(item.id) ?: false
+        holder.bind(item, selected)
     }
     
     override fun getItemId(position: Int): Long {
