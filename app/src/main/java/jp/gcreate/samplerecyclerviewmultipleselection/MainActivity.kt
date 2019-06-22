@@ -5,6 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import jp.gcreate.samplerecyclerviewmultipleselection.databinding.ActivityMainBinding
@@ -15,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: SampleListAdapter
+    private lateinit var tracker: SelectionTracker<Long>
     private val random = Random(System.currentTimeMillis())
     private val charSource = ('0'..'z').toList()
     private var sampleList: MutableList<SampleData> = mutableListOf()
@@ -32,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         
         setupRecyclerView()
         initializeSampleData()
+        savedInstanceState?.let {
+            tracker.onRestoreInstanceState(it)
+        }
     }
     
     private fun initializeSampleData() {
@@ -46,9 +54,19 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         binding.recyclerView.also { view ->
             adapter = SampleListAdapter()
-            view.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            view.layoutManager =
+                LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             view.adapter = adapter
         }
+        tracker = SelectionTracker.Builder("sample-selection",
+            binding.recyclerView,
+            StableIdKeyProvider(binding.recyclerView),
+            SampleItemDetailsLookup(binding.recyclerView),
+            StorageStrategy.createLongStorage()
+        )
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+        adapter.tracker = tracker
     }
     
     private fun generateRandomString(maxLength: Int = 12): String =
@@ -68,7 +86,12 @@ class MainActivity : AppCompatActivity() {
                 sampleList.shuffle()
                 adapter.notifyDataSetChanged()
             }
-            else                 -> super.onOptionsItemSelected(item)
+            else         -> super.onOptionsItemSelected(item)
         }
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        tracker.onSaveInstanceState(outState)
     }
 }
