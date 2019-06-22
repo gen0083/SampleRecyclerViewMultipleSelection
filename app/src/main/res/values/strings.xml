@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">SampleRecyclerViewMultipleSelection</string>
+    <string name="title_main_activity">@string/app_name</string>
+    <string name="title_main_activity_in_action_mode">削除するアイテムを選択してください</string>
     <string name="shuffle">Shuffle</string>
+    <string name="delete">Delete</string>
+
+    <string name="display_action_mode_execute">選択したアイテムを削除する</string>
+    <string name="display_action_mode_cancel">キャンセル</string>
 </resources>
